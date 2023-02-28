@@ -32,26 +32,27 @@ import prodotti.Prodotto;
 public class GodfathersPizza {
 
 	static ArrayList<Prodotto> menu = new ArrayList<Prodotto>();
+	static Prodotto custom;
 
 	public static void main(String[] args) {
 		SpringApplication.run(GodfathersPizza.class, args);
 		/////////////////////////////////////////////////////
 
-//		addProdottoToMenu("margherita");
-//		addProdottoToMenu("hawaii");
-//		addProdottoToMenu("prosciuttoFunghi");
-//		addProdottoToMenu("salamino");
-//		
-//		addProdottoToMenu("acquaNaturale");
-//		addProdottoToMenu("acquaFrizzante");
-//		addProdottoToMenu("cocaCola");
-//		addProdottoToMenu("aranciata");
-//		addProdottoToMenu("sprite");
-//		
-//		addProdottoToMenu("cartone");
-//		addProdottoToMenu("rotella");
-//		
-//		getMenu(menu);
+		addProdottoToMenu("margherita");
+		addProdottoToMenu("hawaii");
+		addProdottoToMenu("prosciuttoFunghi");
+		addProdottoToMenu("salamino");
+		
+		addProdottoToMenu("acquaNaturale");
+		addProdottoToMenu("acquaFrizzante");
+		addProdottoToMenu("cocaCola");
+		addProdottoToMenu("aranciata");
+		addProdottoToMenu("sprite");
+		
+		addProdottoToMenu("cartone");
+		addProdottoToMenu("rotella");
+		
+		getMenu(menu);
 
 		/////////////////////////////////////////////////////
 
@@ -70,12 +71,12 @@ public class GodfathersPizza {
 		 * 2 acqua naturale, 1 acqua frizzante, 1 aranciata
 		 * 1 rotella taglia pizza
 		 */
-
-
 		o1.addProdotto(getProdotto("salamino"));
 		o1.addProdotto(getProdotto("prosciuttoFunghi"));
 		o1.addProdotto(getProdotto("hawaii"));
-		o1.addProdotto(new AggiuntaSalaminoDecorator(new AggiuntaProsciuttoDecorator(new AggiuntaFunghiDecorator(new Pizza()))));
+		custom = new AggiuntaSalaminoDecorator(new AggiuntaProsciuttoDecorator(new AggiuntaFunghiDecorator(new Pizza())));
+		custom.setIsCustom();
+		o1.addProdotto(custom);
 
 		o1.addProdotto(new BevandaAcquaNaturale(new Bevanda()));
 		o1.addProdotto(new BevandaAcquaNaturale(new Bevanda()));
@@ -141,13 +142,16 @@ public class GodfathersPizza {
 	}
 
 	public static Tavolo newTavolo(int id, int maxCoperti, StatoTavolo stato) {
-		Tavolo t = new Tavolo(id, maxCoperti, stato);
+		AnnotationConfigApplicationContext appCtx = new AnnotationConfigApplicationContext(ConfigurationProdotto.class);
+		Tavolo t = (Tavolo) appCtx.getBean("tavolo", id, maxCoperti, stato);
+		((AnnotationConfigApplicationContext) appCtx).close();
 		return t;
 	}
 
-	public static Ordine newOrdine(int numeroOrdine, Tavolo tavolo, StatoOrdine stato, int numeroCoperti,
-			LocalTime oraAcquisizione) {
-		Ordine o = new Ordine(numeroOrdine, tavolo, stato, numeroCoperti, oraAcquisizione);
+	public static Ordine newOrdine(int numeroOrdine, Tavolo tavolo, StatoOrdine stato, int numeroCoperti, LocalTime oraAcquisizione) {
+		AnnotationConfigApplicationContext appCtx = new AnnotationConfigApplicationContext(ConfigurationProdotto.class);
+		Ordine o = (Ordine) appCtx.getBean("ordine", numeroOrdine, tavolo, stato, numeroCoperti, oraAcquisizione);
+		((AnnotationConfigApplicationContext) appCtx).close();
 		return o;
 	}
 	

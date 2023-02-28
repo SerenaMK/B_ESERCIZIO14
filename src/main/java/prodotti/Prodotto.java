@@ -4,6 +4,7 @@ package prodotti;
 public abstract class Prodotto {
 	
 	String nome;
+	boolean isCustom = false;
 	
 	public String getNome() {
 		return this.nome;
@@ -19,5 +20,11 @@ public abstract class Prodotto {
 
 	public abstract double getPrezzo();
 	
+	public boolean getIsCustom() {
+		return isCustom;
+	}
+	public void setIsCustom() {
+		isCustom = true;
+	}
 
 }

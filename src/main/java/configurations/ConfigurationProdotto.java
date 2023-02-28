@@ -1,5 +1,7 @@
 package configurations;
 
+import java.time.LocalTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -19,13 +21,33 @@ import decorators.BevandaAcquaNaturale;
 import decorators.BevandaAranciata;
 import decorators.BevandaCocaCola;
 import decorators.BevandaSprite;
+import enums.StatoOrdine;
+import enums.StatoTavolo;
+import ordini.Ordine;
+import ordini.Tavolo;
 import prodotti.Altro;
 import prodotti.Bevanda;
 import prodotti.Pizza;
 import prodotti.Prodotto;
 
 @Configuration
+@PropertySource("classpath:application.properties")
 public class ConfigurationProdotto {
+	
+	///////////////////////////
+	@Bean
+	@Scope("prototype")
+	public Tavolo tavolo(int id, int maxCoperti, StatoTavolo stato) {
+		return new Tavolo(id, maxCoperti, stato);
+	}
+	
+	@Bean
+	@Scope("prototype")
+	public Ordine ordine(int numeroOrdine, Tavolo tavolo, StatoOrdine stato, int numeroCoperti,
+			LocalTime oraAcquisizione) {
+		Ordine o = new Ordine(numeroOrdine, tavolo, stato, numeroCoperti, oraAcquisizione);
+		return o;
+	}
 	
 	////////// PIZZE //////////
 	@Bean
